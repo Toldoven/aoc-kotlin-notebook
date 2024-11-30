@@ -1,0 +1,1 @@
+package com.toldoven.aoc.utils
