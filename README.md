@@ -16,11 +16,7 @@ Install [Kotlin Notebook Plugin](https://www.jetbrains.com/help/idea/kotlin-note
 
 Check out the example: [example.ipynb](example.ipynb)
 
-1. Clone the repository and open it in IntelliJ IDEA.
-
-```bash
-git clone https://github.com/Toldoven/aoc-kotlin-notebook.git
-```
+1. Clone the repository or use it as a template. Open it in IntelliJ IDEA.
 
 2. Create a Notebook.
 
