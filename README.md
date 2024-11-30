@@ -2,7 +2,7 @@
 
 Solve Advent of Code interactively, without leaving your IDE, with [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html)!
 
-![](https://i.imgur.com/1q1Ubh1.gif)
+https://github.com/user-attachments/assets/46c85513-7156-412c-b26a-bade8593a429
 
 ## Prerequisites
 
