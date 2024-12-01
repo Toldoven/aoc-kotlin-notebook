@@ -164,6 +164,7 @@ class AocClient(private val sessionToken: String) {
             .apply {
                 requestMethod = "GET"
                 setRequestProperty("Cookie", "session=$sessionToken")
+                setRequestProperty("User-Agent", "github.com/Toldoven/aoc-kotlin-notebook by toldoven@proton.me")
                 verifyResponseCode(responseCode)
             }
             .inputStream
