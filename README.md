@@ -71,11 +71,9 @@ aoc.submitPartOne("...")
 > [!NOTE]
 > To display the value in the Notebook — it needs to be on the last line of the block, or you can use `DISPLAY(...)` function.
 
-![](https://i.imgur.com/xBAVuPQ.png)
-
 ## TODO
 
-This project is not finished. I still have a few ideas I will hopefully get to implement.
+A few ideas I will hopefully get to implement.
 
 - A way to run tests.
   - Perhaps a way to extract tests from the description automatically with LLM. Not sure if this is legal, though.
