@@ -21,7 +21,7 @@ Install [Kotlin Notebook Plugin](https://www.jetbrains.com/help/idea/kotlin-note
 
 ![](https://i.imgur.com/i5Kigvb.png)
 
-2. Add a dependency to this library.
+2. Add a dependency.
 
 Just type this inside of the Kotlin Notebook:
 
