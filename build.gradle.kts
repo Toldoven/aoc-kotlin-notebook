@@ -1,10 +1,9 @@
-import com.vanniktech.maven.publish.KotlinJvm
 import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
     kotlin("jvm") version "1.9.24"
     id("org.jetbrains.kotlin.jupyter.api") version "0.12.0-339"
-    id("com.vanniktech.maven.publish.base") version "0.30.0"
+    id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
 repositories {
@@ -32,8 +31,6 @@ kotlin {
 mavenPublishing {
     coordinates(artifactId = property("artifactId") as String)
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
-
-    configure(KotlinJvm())
 
     pom {
         name.set("Advent of Code Kotlin Notebook")
