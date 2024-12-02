@@ -1,3 +1,6 @@
+[![maven-central](https://img.shields.io/maven-central/v/com.toldoven.aoc/aoc-kotlin-notebook.svg?color=0)](https://central.sonatype.com/artifact/com.toldoven.aoc/aoc-kotlin-notebook)
+[![License](https://img.shields.io/github/license/toldoven/aoc-kotlin-notebook.svg)](https://github.com/Toldoven/aoc-kotlin-notebook/blob/master/LICENSE)
+
 # Advent of Code Kotlin Notebook Framework
 
 Solve Advent of Code interactively, without leaving your IDE, with [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html)!
@@ -14,11 +17,27 @@ Install [Kotlin Notebook Plugin](https://www.jetbrains.com/help/idea/kotlin-note
 
 ## Getting Started
 
-1. Clone the repository or use it as a template. Open it in IntelliJ IDEA.
-
-2. Create a Notebook.
+1. Create a new Kotlin Notebook.
 
 ![](https://i.imgur.com/i5Kigvb.png)
+
+2. Add a dependency to this library.
+
+Just type this inside of the Kotlin Notebook:
+
+```kotlin
+@file:DependsOn("com.toldoven.aoc:aoc-kotlin-notebook:1.0.0")
+```
+
+Or with Gradle inside of `build.gradle.kts` if you don't want to add it manually every time you create a new notebook:
+
+```kotlin
+dependencies {
+    implementation("com.toldoven.aoc:aoc-kotlin-notebook:1.0.0")
+}
+```
+
+Don't forget to restart the Notebook kernel after adding a new dependency with Gradle.
 
 3. Get your Advent of Code token and set an environment variable.
 
@@ -51,14 +70,6 @@ aoc.submitPartOne("...")
 ```
 > [!NOTE]
 > To display the value in the Notebook — it needs to be on the last line of the block, or you can use `DISPLAY(...)` function.
-
-## Troubleshooting
-
-If you can't resolve framework classes, try to change this from `All Project Libraries` to `aoc.main`.
-
-![](https://i.imgur.com/VvYToNC.png)
-
-Don't forget to restart the Kernel after changing the dependencies.
 
 ![](https://i.imgur.com/xBAVuPQ.png)
 
