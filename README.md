@@ -82,7 +82,6 @@ This project is not finished. I still have a few ideas I will hopefully get to i
 - Synchronize with server time.
 - A way to receive a notification when you can submit again after failing.
 - A way to fetch a puzzle as soon as it becomes available.
-- Add proper utils module.
 
 ## Additional Resources
 
