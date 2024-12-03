@@ -67,18 +67,22 @@ You can specify a different path to the file with the `AOC_TOKEN_FILE` environme
 
 ## 5. Update .gitignore
 
+### Token
+
 > [!CAUTION]
 > If you're uploading your solutions to GitHub — don't forget to add files with your token to .gitignore.
 > If you're using Kotlin Notebook environment variables, they are not ignored by default.
 > They are saved in the `.idea/kotlinNotebook.xml` file.
 
+### Cache
+
 All data that doesn't change is cached. This includes puzzle descriptions, input, and solutions.
 
 The default cache folder is `.aocCache` in the current working directory. You can change it with `AOC_CACHE_DIR` environment variable.
 
-Add cache folder to `.gitignore`.
-
-Redistributing Advent of Code puzzle descriptions and inputs is **NOT ALLOWED.**
+> [!WARNING]
+> Add cache folder to `.gitignore`.
+> Redistributing Advent of Code puzzle descriptions and inputs is **NOT ALLOWED.**
 
 Since input and solutions are unique for each user, they are stored in a folder named with a secure hashed session token.
 
