@@ -131,14 +131,15 @@ class InteractiveAocDay(
 
     fun waitUntilUnlocked() = runBlocking {
         val (dayEta, durationEta) = client.nextDayEta() ?: run {
-            // Fall back to local estimation
-            TODO()
+            // Fall back to local estimate, if can't fetch server eta for whatever reason
+            day to day.untilStartsEstimate()
         }
 
-
         when {
+            // Day is already unlocked
             day < dayEta -> return@runBlocking
-            day > dayEta -> TODO() // Throw an error
+            // Day is yet to unlock, but it's not the next day
+            day > dayEta -> throw Exception("This feature only works for the closest next day. Next day is: ${dayEta.year} Day ${dayEta.day}. Your day is: ${day.year} Day ${day.day}")
         }
 
         assert(day == dayEta)
@@ -147,7 +148,7 @@ class InteractiveAocDay(
 //
 //        println(durationEta)
 
-        (durationEta.inWholeSeconds downTo 0L).forEach {
+        (durationEta.seconds downTo 0L).forEach {
             val formated = it.seconds.toComponents { hours, minutes, seconds, _ ->
                 "${hours.pad()}:${minutes.pad()}:${seconds.pad()}"
             }

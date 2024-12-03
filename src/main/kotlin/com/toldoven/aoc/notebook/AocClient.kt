@@ -9,8 +9,7 @@ import it.skrape.selects.html5.*
 import java.io.File
 import java.net.URL
 import java.security.MessageDigest
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
+import java.time.Duration
 
 
 class AocClient(private val sessionToken: String) {
@@ -134,7 +133,7 @@ class AocClient(private val sessionToken: String) {
                                     ?.get(1)
                                     ?.value
                                     ?.toLong()
-                                    ?.let { it.seconds }
+                                    ?.let { Duration.ofSeconds(it) }
                             }
                         } ?: throw Exception("Can't find ETA")
 

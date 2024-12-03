@@ -40,22 +40,28 @@ data class AocDay(val year: Int, val day: Int): Comparable<AocDay> {
         }
     }
 
-//    fun untilStartsEstimate(): Duration {
-//        val time = LocalDateTime.of(year, Month.DECEMBER, day, 0, 0).atZone(zone)
-//        val now = ZonedDateTime.now(zone)
-//        val duration = Duration.between(now, time)
-//        return duration
-//    }
+    private fun targetAndNow() = LocalDateTime.of(
+        year,
+        Month.DECEMBER,
+        day,
+        0,
+        0
+    ).atZone(zone) to ZonedDateTime.now(zone)
+
+    fun untilStartsEstimate(): Duration {
+        val (target, now) = targetAndNow()
+        val duration = Duration.between(now, target)
+        return duration
+    }
 
     fun requireUnlocked() {
-        val time = LocalDateTime.of(year, Month.DECEMBER, day, 0, 0).atZone(zone)
-        val now = ZonedDateTime.now(zone)
+        val (target, now) = targetAndNow()
 
-        if (now.isAfter(time)) {
+        if (now.isAfter(target)) {
             return
         }
 
-        val duration = Duration.between(now, time)
+        val duration = Duration.between(now, target)
 
         val humanReadableTime = duration.humanReadable()
 
