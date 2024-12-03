@@ -5,7 +5,6 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import java.io.File
-import java.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 private class AocDayCache(cacheDir: File, day: AocDay, private val tokenHash: String) {
@@ -130,29 +129,27 @@ class InteractiveAocDay(
     }
 
     fun waitUntilUnlocked() = runBlocking {
-        val (dayEta, durationEta) = client.nextDayEta() ?: run {
-            // Fall back to local estimate, if can't fetch server eta for whatever reason
-            day to day.untilStartsEstimate()
-        }
 
-        when {
-            // Day is already unlocked
-            day < dayEta -> return@runBlocking
-            // Day is yet to unlock, but it's not the next day
-            day > dayEta -> throw Exception("This feature only works for the closest next day. Next day is: ${dayEta.year} Day ${dayEta.day}. Your day is: ${day.year} Day ${day.day}")
-        }
+        val (dayEta, durationEta) = client.nextDayEta()
+            ?.takeIf { (dayEta, _) -> day == dayEta }
+            ?: run {
+                println("Server ETA is not available, falling back to local ETA")
+                day to day.untilStartsEstimate()
+            }
 
-        assert(day == dayEta)
+        // Day is already unlocked
+        if (day < dayEta || (day == dayEta && durationEta.isNegative)) {
+            println("Day is already unlocked!")
+            return@runBlocking
+        }
 
         fun Number.pad() = toString().padStart(2, '0')
-//
-//        println(durationEta)
 
         (durationEta.seconds downTo 0L).forEach {
             val formated = it.seconds.toComponents { hours, minutes, seconds, _ ->
                 "${hours.pad()}:${minutes.pad()}:${seconds.pad()}"
             }
-            print("Day ${day.day} starts in ${formated}\r")
+            print("AoC ${day.year} Day ${day.day} starts in ${formated}\r")
             delay(1.seconds)
         }
 

@@ -40,22 +40,22 @@ data class AocDay(val year: Int, val day: Int): Comparable<AocDay> {
         }
     }
 
-    private fun targetAndNow() = LocalDateTime.of(
+    private fun targetTime() = LocalDateTime.of(
         year,
         Month.DECEMBER,
         day,
         0,
         0
-    ).atZone(zone) to ZonedDateTime.now(zone)
+    ).atZone(zone)
 
     fun untilStartsEstimate(): Duration {
-        val (target, now) = targetAndNow()
+        val (target, now) = targetTime() to now()
         val duration = Duration.between(now, target)
         return duration
     }
 
     fun requireUnlocked() {
-        val (target, now) = targetAndNow()
+        val (target, now) = targetTime() to now()
 
         if (now.isAfter(target)) {
             return
@@ -70,6 +70,8 @@ data class AocDay(val year: Int, val day: Int): Comparable<AocDay> {
 
     companion object {
         private val zone = ZoneId.of("America/New_York")
+
+        private fun now() = ZonedDateTime.now(zone)
     }
 
     override fun compareTo(other: AocDay) =
