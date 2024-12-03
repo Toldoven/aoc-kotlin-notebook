@@ -1,4 +1,4 @@
-[![maven-central](https://img.shields.io/maven-central/v/com.toldoven.aoc/aoc-kotlin-notebook.svg?color=0)](https://central.sonatype.com/artifact/com.toldoven.aoc/aoc-kotlin-notebook)
+[![Maven Central](https://img.shields.io/maven-central/v/com.toldoven.aoc/aoc-kotlin-notebook.svg?color=0)](https://central.sonatype.com/artifact/com.toldoven.aoc/aoc-kotlin-notebook)
 [![License](https://img.shields.io/github/license/toldoven/aoc-kotlin-notebook.svg)](https://github.com/Toldoven/aoc-kotlin-notebook/blob/master/LICENSE)
 
 # Advent of Code Kotlin Notebook Framework
@@ -15,13 +15,13 @@ You can start a trial for 30 days, or use [Early Access](https://www.jetbrains.c
 
 Install [Kotlin Notebook Plugin](https://www.jetbrains.com/help/idea/kotlin-notebook.html#install-plugin).
 
-## Getting Started
+## Setup
 
-1. Create a new Kotlin Notebook.
+### 1. Create a new Kotlin Notebook
 
 ![](https://i.imgur.com/i5Kigvb.png)
 
-2. Add a dependency.
+### 2. Add a dependency
 
 Just type this inside of the Kotlin Notebook:
 
@@ -39,19 +39,50 @@ dependencies {
 
 Don't forget to restart the Notebook kernel after adding a new dependency with Gradle.
 
-3. Get your Advent of Code token and set an environment variable.
+### 3. Get your Advent of Code token
 
-Open the developer console on the Advent of Code website and grab the `session` cookie.
+Open the developer console on the [Advent of Code website](https://adventofcode.com/) and grab the `session` cookie.
 
 ![](https://i.imgur.com/ucUbr3a.png)
 
-Then open Kotlin Notebook settings and set the environment variable `AOC_TOKEN`.
+### 4. Specify the token
+
+**Using an environment variable**
+
+Open Kotlin Notebook settings and set the environment variable `AOC_TOKEN`.
 
 ![](https://i.imgur.com/rzNHhHq.png)
 
 ![](https://i.imgur.com/2gVWC6F.png)
 
-4. Use it!
+When constructing a client use `AocClient.fromEnv()`.
+
+**Using a file**
+
+Create a file in the current working directory called `.aocToken` and paste your token inside.
+
+When constructing a client use `AocClient.fromFile()`.
+
+You can specify a different path to the file with the `AOC_TOKEN_FILE` environment variable.
+
+### 5. Update .gitignore
+
+> [!CAUTION]
+> If you're uploading your solutions to GitHub — don't forget to add files with your token to .gitignore.
+> If you're using Kotlin Notebook environment variables, they are not ignored by default.
+> They are saved in the `.idea/kotlinNotebook.xml` file.
+
+All data that doesn't change is cached. This includes puzzle descriptions, input, and solutions.
+
+The default cache folder is `.aocCache` in the current working directory. You can change it with `AOC_CACHE_DIR` environment variable.
+
+Add cache folder to `.gitignore`.
+
+Redistributing Advent of Code puzzle descriptions and inputs is **NOT ALLOWED.**
+
+Since input and solutions are unique for each user, they are stored in a folder named with a secure hash session token.
+
+## Usage
 
 Check out the example: [example.ipynb](example.ipynb)
 

@@ -5,13 +5,44 @@ import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import java.io.File
 
+private class AocDayCache(cacheDir: File, day: AocDay, private val tokenHash: String) {
 
-private fun cacheFile(file: File, fetchFunc: () -> String) = if (file.isFile) {
-    file.readText()
-} else {
-    fetchFunc().also {
-        file.parentFile.mkdirs()
-        file.writeText(it)
+    private val cacheDirDay = File(cacheDir, "year${day.year}/day${day.day}")
+
+    init {
+        cacheDirDay.mkdirs()
+    }
+
+    fun getFile(
+        path: String,
+        unique: Boolean = true,
+        fetchFunc: () -> String,
+    ): String {
+
+        val file = if (unique) {
+            File(File(cacheDirDay, "user_$tokenHash"), path)
+        } else {
+            File(cacheDirDay, path)
+        }
+
+        return if (file.isFile) {
+            file.readText()
+        } else {
+            fetchFunc().also {
+                file.parentFile.mkdirs()
+                file.writeText(it)
+            }
+        }
+    }
+
+    companion object {
+        fun fromEnvOrDefault(tokenHash: String, day: AocDay): AocDayCache {
+            val path = System.getenv("AOC_CACHE_DIR") ?: ".aocCache"
+
+            val dir = File(path)
+
+            return AocDayCache(dir, day, tokenHash)
+        }
     }
 }
 
@@ -19,38 +50,31 @@ class InteractiveAocDay(
     private val client: AocClient,
     private val day: AocDay,
 ) {
-    private val cachePath = File(".aocCache/day/${day.year}/day${day.day}/")
+    private val cache = AocDayCache.fromEnvOrDefault(client.tokenHash, day)
 
-    fun input() = cacheFile(
-        File(cachePath, "input.txt")
-    ) {
+    fun input() = cache.getFile("input.txt") {
         runBlocking {
             client.fetchInput(day).trim()
         }
     }
 
-    fun viewPartOne() = cacheFile(
-        File(cachePath, "part_one.html")
-    ) {
+    fun viewPartOne() = cache.getFile("part_one.html", false) {
         runBlocking {
-            client.partOneHTML(day)
+            client.fetchAocPageDay(day).partOne.html
         }
     }
         .let(::HTML)
 
-    fun viewPartTwo() = cacheFile(
-        File(cachePath, "part_two.html")
-    ) {
+    fun viewPartTwo() = cache.getFile("part_two.html", false) {
         runBlocking {
-            client.partTwoHTML(day)
+            client.fetchAocPageDay(day).partTwo?.html
+                ?: throw Exception("Part two is not unlocked yet!")
         }
     }
         .let(::HTML)
 
 
-    private fun getSolution(part: Int) = cacheFile(
-        File(cachePath, "part${part}_solution.txt")
-    ) {
+    private fun getSolution(part: Int) = cache.getFile("part${part}_solution.txt") {
         runBlocking { client.fetchAocPageDay(day) }
             .getPart(part)
             ?.solution
