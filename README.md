@@ -121,9 +121,8 @@ A few ideas I will hopefully get to implement.
 
 - A way to run tests.
   - Perhaps a way to extract tests from the description automatically with an LLM. Not sure if this is legal, though.
-- Synchronize with server time.
+- Improve integration using Kotlin Notebook's API.
 - A way to receive a notification when you can submit again after failing.
-- A way to fetch a puzzle as soon as it becomes available.
 
 # Additional Resources
 

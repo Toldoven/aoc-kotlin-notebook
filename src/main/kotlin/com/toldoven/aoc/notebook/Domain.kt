@@ -30,7 +30,7 @@ data class AocPageSolution(
     val value: String,
 )
 
-data class AocDay(val year: Int, val day: Int) {
+data class AocDay(val year: Int, val day: Int): Comparable<AocDay> {
     init {
         require(day in 1..25) {
             "Day $day is not the day of Advent of Code. Please enter a number between 1 and 25"
@@ -40,15 +40,28 @@ data class AocDay(val year: Int, val day: Int) {
         }
     }
 
-    fun requireUnlocked() {
-        val time = LocalDateTime.of(year, Month.DECEMBER, day, 0, 0).atZone(zone)
-        val now = ZonedDateTime.now(zone)
+    private fun targetTime() = LocalDateTime.of(
+        year,
+        Month.DECEMBER,
+        day,
+        0,
+        0
+    ).atZone(zone)
 
-        if (now.isAfter(time)) {
+    fun untilStartsEstimate(): Duration {
+        val (target, now) = targetTime() to now()
+        val duration = Duration.between(now, target)
+        return duration
+    }
+
+    fun requireUnlocked() {
+        val (target, now) = targetTime() to now()
+
+        if (now.isAfter(target)) {
             return
         }
 
-        val duration = Duration.between(now, time)
+        val duration = Duration.between(now, target)
 
         val humanReadableTime = duration.humanReadable()
 
@@ -57,5 +70,11 @@ data class AocDay(val year: Int, val day: Int) {
 
     companion object {
         private val zone = ZoneId.of("America/New_York")
+
+        private fun now() = ZonedDateTime.now(zone)
     }
+
+    override fun compareTo(other: AocDay) =
+        compareBy<AocDay>({ it.year }, { it.day })
+            .compare(this, other)
 }

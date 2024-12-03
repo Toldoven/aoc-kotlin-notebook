@@ -1,9 +1,11 @@
 package com.toldoven.aoc.notebook
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import java.io.File
+import kotlin.time.Duration.Companion.seconds
 
 private class AocDayCache(cacheDir: File, day: AocDay, private val tokenHash: String) {
 
@@ -54,7 +56,7 @@ class InteractiveAocDay(
 
     fun input() = cache.getFile("input.txt") {
         runBlocking {
-            client.fetchInput(day).trim()
+            client.fetchInput(day)
         }
     }
 
@@ -124,5 +126,33 @@ class InteractiveAocDay(
 
     fun submitPartTwo(answer: Any) = runBlocking {
         submit(2, answer.toString())
+    }
+
+    fun waitUntilUnlocked() = runBlocking {
+
+        val (dayEta, durationEta) = client.nextDayEta()
+            ?.takeIf { (dayEta, _) -> day == dayEta }
+            ?: run {
+                println("Server ETA is not available, falling back to local ETA")
+                day to day.untilStartsEstimate()
+            }
+
+        // Day is already unlocked
+        if (day < dayEta || (day == dayEta && durationEta.isNegative)) {
+            println("Day is already unlocked!")
+            return@runBlocking
+        }
+
+        fun Number.pad() = toString().padStart(2, '0')
+
+        (durationEta.seconds downTo 0L).forEach {
+            val formated = it.seconds.toComponents { hours, minutes, seconds, _ ->
+                "${hours.pad()}:${minutes.pad()}:${seconds.pad()}"
+            }
+            print("AoC ${day.year} Day ${day.day} starts in ${formated}\r")
+            delay(1.seconds)
+        }
+
+        println("Day started!")
     }
 }
