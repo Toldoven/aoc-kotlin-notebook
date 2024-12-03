@@ -107,6 +107,14 @@ aoc.submitPartOne("...")
 > [!NOTE]
 > To display the value in the Notebook — it needs to be on the last line of the block, or you can use `DISPLAY(...)` function.
 
+# Compliance 
+
+This tool follows the [automation guidelines](https://www.reddit.com/r/adventofcode/wiki/faqs/automation) on the [/r/adventofcode](https://www.reddit.com/r/adventofcode/) community wiki.
+
+- Everything that can be cached is cached. [(Source)](https://github.com/Toldoven/aoc-kotlin-notebook/blob/main/src/main/kotlin/com/toldoven/aoc/notebook/Notebook.kt#L8)
+- The calls to Advent of Code website are not throttled, because each call requires action from the user, and it's up to the user to use it responsibly.
+- The User-Agent header contains a link to this repo and contact info. [(Source)](https://github.com/Toldoven/aoc-kotlin-notebook/blob/main/src/main/kotlin/com/toldoven/aoc/notebook/AocClient.kt)
+
 # TODO
 
 A few ideas I will hopefully get to implement.
