@@ -9,18 +9,28 @@ import it.skrape.selects.html5.article
 import it.skrape.selects.html5.code
 import it.skrape.selects.html5.p
 import java.io.File
-import java.net.HttpURLConnection
 import java.net.URL
 import java.security.MessageDigest
 
 
 class AocClient(private val sessionToken: String) {
 
+    val tokenHash: String by lazy {
+        MessageDigest
+            .getInstance("SHA-256")
+            .digest(sessionToken.toByteArray())
+            .joinToString("") { "%02x".format(it) }
+            .take(16)
+    }
+
     private val baseUrl = URL("https://adventofcode.com/")
 
     private val aocSkrape = skrape(HttpFetcher) {
         request {
-            headers = mapOf("Cookie" to "session=$sessionToken")
+            headers = mapOf(
+                "Cookie" to "session=$sessionToken",
+                "User-Agent" to "https://github.com/Toldoven/aoc-kotlin-notebook by toldoven@proton.me",
+            )
         }
     }
 
@@ -44,31 +54,20 @@ class AocClient(private val sessionToken: String) {
         throw Exception("Unknown server error HTTP $code")
     }
 
-    val tokenHash: String by lazy {
-        MessageDigest
-            .getInstance("SHA-256")
-            .digest(sessionToken.toByteArray())
-            .joinToString("") { "%02x".format(it) }
-            .take(16)
-    }
 
-    fun fetchInput(day: AocDay): String {
+    suspend fun fetchInput(day: AocDay): String {
         day.requireUnlocked()
 
-        val url = URL(baseUrl, "/${day.year}/day/${day.day}/input")
-
-        val input = url.openConnection()
-            .let { it as HttpURLConnection }
-            .apply {
-                requestMethod = "GET"
-                setRequestProperty("Cookie", "session=$sessionToken")
-                verifyResponseCode(responseCode)
+        return aocSkrape.apply {
+            request {
+                url = URL(baseUrl, "/${day.year}/day/${day.day}/input").toString()
             }
-            .inputStream
-            .bufferedReader()
-            .readText()
+        }.response {
 
-        return input
+            verifyResponseCode(responseStatus.code)
+
+            responseBody
+        }
     }
 
     suspend fun fetchAocPageDay(day: AocDay): AocPageDay {
@@ -126,6 +125,8 @@ class AocClient(private val sessionToken: String) {
                 }
             }
         }.response {
+            verifyResponseCode(responseStatus.code)
+
             htmlDocument {
                 article {
                     findFirst {
