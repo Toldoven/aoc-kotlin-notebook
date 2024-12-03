@@ -67,10 +67,11 @@ You can specify a different path to the file with the `AOC_TOKEN_FILE` environme
 
 ## 5. Update .gitignore
 
+If you're uploading your solutions to GitHub — don't forget to add files with your token and cache to `.gitignore`.
+
 ### Token
 
 > [!CAUTION]
-> If you're uploading your solutions to GitHub — don't forget to add files with your token to .gitignore.
 > If you're using Kotlin Notebook environment variables, they are not ignored by default.
 > They are saved in the `.idea/kotlinNotebook.xml` file.
 
