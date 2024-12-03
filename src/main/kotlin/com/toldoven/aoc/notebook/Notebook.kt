@@ -54,7 +54,7 @@ class InteractiveAocDay(
 
     fun input() = cache.getFile("input.txt") {
         runBlocking {
-            client.fetchInput(day).trim()
+            client.fetchInput(day)
         }
     }
 

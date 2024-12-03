@@ -5,12 +5,11 @@ import it.skrape.fetcher.HttpFetcher
 import it.skrape.fetcher.Method
 import it.skrape.fetcher.response
 import it.skrape.fetcher.skrape
-import it.skrape.selects.html5.article
-import it.skrape.selects.html5.code
-import it.skrape.selects.html5.p
+import it.skrape.selects.html5.*
 import java.io.File
 import java.net.URL
 import java.security.MessageDigest
+import java.time.Duration
 
 
 class AocClient(private val sessionToken: String) {
@@ -54,7 +53,6 @@ class AocClient(private val sessionToken: String) {
         throw Exception("Unknown server error HTTP $code")
     }
 
-
     suspend fun fetchInput(day: AocDay): String {
         day.requireUnlocked()
 
@@ -66,7 +64,7 @@ class AocClient(private val sessionToken: String) {
 
             verifyResponseCode(responseStatus.code)
 
-            responseBody
+            responseBody.trim()
         }
     }
 
@@ -108,6 +106,32 @@ class AocClient(private val sessionToken: String) {
                 )
             }
         }
+    }
+
+    private suspend fun tryGetServerEta() = aocSkrape.apply {
+        request {
+            url = baseUrl.toString()
+        }
+    }.response {
+        verifyResponseCode(responseStatus.code)
+
+        runCatching {
+            htmlDocument {
+                pre(".calendar") {
+                    script {
+                        findFirst {
+                            Regex("var server_eta = (\\d+);")
+                                .find(html)
+                                ?.groups
+                                ?.get(1)
+                                ?.value
+                                ?.toLong()
+                                ?.let { Duration.ofSeconds(it) }
+                        }
+                    }
+                }
+            }
+        }.getOrNull()
     }
 
     suspend fun submit(part: Int, day: AocDay, answer: String): Pair<SubmissionOutcome, String> {
