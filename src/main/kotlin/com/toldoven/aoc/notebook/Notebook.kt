@@ -1,5 +1,6 @@
 package com.toldoven.aoc.notebook
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
@@ -134,6 +135,7 @@ class InteractiveAocDay(
             TODO()
         }
 
+
         when {
             day < dayEta -> return@runBlocking
             day > dayEta -> TODO() // Throw an error
@@ -141,11 +143,16 @@ class InteractiveAocDay(
 
         assert(day == dayEta)
 
-        (0L..durationEta.inWholeSeconds).forEach {
+        fun Number.pad() = toString().padStart(2, '0')
+//
+//        println(durationEta)
+
+        (durationEta.inWholeSeconds downTo 0L).forEach {
             val formated = it.seconds.toComponents { hours, minutes, seconds, _ ->
-                "$hours:$minutes:$seconds"
+                "${hours.pad()}:${minutes.pad()}:${seconds.pad()}"
             }
-            println("Day ${day.day} starts in $formated\r")
+            print("Day ${day.day} starts in ${formated}\r")
+            delay(1.seconds)
         }
 
         println("Day started!")
