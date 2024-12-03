@@ -11,6 +11,7 @@ import it.skrape.selects.html5.p
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
+import java.security.MessageDigest
 
 
 class AocClient(private val sessionToken: String) {
@@ -41,6 +42,14 @@ class AocClient(private val sessionToken: String) {
         }
 
         throw Exception("Unknown server error HTTP $code")
+    }
+
+    val tokenHash: String by lazy {
+        MessageDigest
+            .getInstance("SHA-256")
+            .digest(sessionToken.toByteArray())
+            .joinToString("") { "%02x".format(it) }
+            .take(16)
     }
 
     fun fetchInput(day: AocDay): String {
@@ -102,11 +111,6 @@ class AocClient(private val sessionToken: String) {
         }
     }
 
-    suspend fun partOneHTML(day: AocDay): String = fetchAocPageDay(day).partOne.html
-
-    suspend fun partTwoHTML(day: AocDay): String = fetchAocPageDay(day).partTwo?.html ?:
-        throw Exception("Part two is not unlocked yet!")
-
     suspend fun submit(part: Int, day: AocDay, answer: String): Pair<SubmissionOutcome, String> {
         day.requireUnlocked()
 
@@ -150,12 +154,20 @@ class AocClient(private val sessionToken: String) {
 
     companion object {
         fun fromFile(): AocClient {
-            val exception = "Advent of Code token is missing. Create a '.session' in the same folder as your notebook file and paste your Advent of Code token inside"
 
-            val token = File(".session")
-                .also { require(it.isFile) { exception } }
-                .readText()
-                .also { require(it.isNotBlank()) { exception } }
+            val path = System.getenv("AOC_TOKEN_FILE") ?: "./.aocToken"
+
+            val file = File(path)
+
+            require(file.isFile) {
+                "Advent of Code token file is missing. Create a file and paste your Advent of Code token inside. File path: ${file.canonicalPath}"
+            }
+
+            val token = file.readText().also {
+                require(it.isNotBlank()) {
+                    "Advent of Code token file is empty. Paste your Advent of Code token inside. File path: ${file.canonicalPath}"
+                }
+            }
 
             return AocClient(token)
         }
