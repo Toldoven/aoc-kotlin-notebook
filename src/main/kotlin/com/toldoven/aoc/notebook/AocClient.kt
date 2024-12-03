@@ -9,7 +9,8 @@ import it.skrape.selects.html5.*
 import java.io.File
 import java.net.URL
 import java.security.MessageDigest
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 
 class AocClient(private val sessionToken: String) {
@@ -108,7 +109,7 @@ class AocClient(private val sessionToken: String) {
         }
     }
 
-    private suspend fun tryGetServerEta() = aocSkrape.apply {
+    suspend fun nextDayEta() = aocSkrape.apply {
         request {
             url = baseUrl.toString()
         }
@@ -117,19 +118,39 @@ class AocClient(private val sessionToken: String) {
 
         runCatching {
             htmlDocument {
-                pre(".calendar") {
-                    script {
+                val (day, serverEta) = "pre.calendar > span" {
+                    findFirst {
+                        val day = "span.calendar-day" {
+                            findFirst {
+                                text.toInt()
+                            }
+                        }
+
+                        val serverEta = script {
+                            findFirst {
+                                Regex("var server_eta = (\\d+);")
+                                    .find(html)
+                                    ?.groups
+                                    ?.get(1)
+                                    ?.value
+                                    ?.toLong()
+                                    ?.let { it.seconds }
+                            }
+                        } ?: throw Exception("Can't find ETA")
+
+                        day to serverEta
+                    }
+                }
+
+                val year = h1(".title-event") {
+                    a {
                         findFirst {
-                            Regex("var server_eta = (\\d+);")
-                                .find(html)
-                                ?.groups
-                                ?.get(1)
-                                ?.value
-                                ?.toLong()
-                                ?.let { Duration.ofSeconds(it) }
+                            text.toInt()
                         }
                     }
                 }
+
+                AocDay(year, day) to serverEta
             }
         }.getOrNull()
     }

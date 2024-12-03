@@ -4,6 +4,8 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import java.io.File
+import java.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 private class AocDayCache(cacheDir: File, day: AocDay, private val tokenHash: String) {
 
@@ -124,5 +126,28 @@ class InteractiveAocDay(
 
     fun submitPartTwo(answer: Any) = runBlocking {
         submit(2, answer.toString())
+    }
+
+    fun waitUntilUnlocked() = runBlocking {
+        val (dayEta, durationEta) = client.nextDayEta() ?: run {
+            // Fall back to local estimation
+            TODO()
+        }
+
+        when {
+            day < dayEta -> return@runBlocking
+            day > dayEta -> TODO() // Throw an error
+        }
+
+        assert(day == dayEta)
+
+        (0L..durationEta.inWholeSeconds).forEach {
+            val formated = it.seconds.toComponents { hours, minutes, seconds, _ ->
+                "$hours:$minutes:$seconds"
+            }
+            println("Day ${day.day} starts in $formated\r")
+        }
+
+        println("Day started!")
     }
 }
