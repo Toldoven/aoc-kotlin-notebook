@@ -92,17 +92,26 @@ Since input and solutions are unique for each user, they are stored in a folder 
 Check out the example: [example.ipynb](example.ipynb)
 
 ```kotlin
+// Initialize a day
 val aoc = AocClient.fromEnv().interactiveDay(2019, 1)
 
+// Interactive timer synchronized with server time
+aoc.waitUntilUnlocked()
+
+// View part one problem description
 aoc.viewPartOne()
 
+// Get the input
 aoc.input()
 
-aoc.submitPartOne("...")
+// Submit the first part
+aoc.submitPartOne(123)
 
+// View part two problem description
 aoc.viewPartTwo()
 
-aoc.submitPartOne("...")
+// Submit the second part
+aoc.submitPartOne("321")
 ```
 > [!NOTE]
 > To display the value in the Notebook — it needs to be on the last line of the block, or you can use `DISPLAY(...)` function.
