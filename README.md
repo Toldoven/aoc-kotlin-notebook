@@ -26,14 +26,14 @@ Install [Kotlin Notebook Plugin](https://www.jetbrains.com/help/idea/kotlin-note
 Just type this inside of the Kotlin Notebook:
 
 ```kotlin
-@file:DependsOn("com.toldoven.aoc:aoc-kotlin-notebook:1.1.1")
+@file:DependsOn("com.toldoven.aoc:aoc-kotlin-notebook:1.1.2")
 ```
 
 Or with Gradle inside of `build.gradle.kts` if you don't want to add it manually every time you create a new notebook:
 
 ```kotlin
 dependencies {
-    implementation("com.toldoven.aoc:aoc-kotlin-notebook:1.1.1")
+    implementation("com.toldoven.aoc:aoc-kotlin-notebook:1.1.2")
 }
 ```
 
