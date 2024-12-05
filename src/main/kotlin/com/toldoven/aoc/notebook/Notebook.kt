@@ -150,7 +150,7 @@ class InteractiveAocDay(
 
         (durationEta.seconds downTo 0L).asSequence().map { secondsLeft ->
             val timeLeft = Duration.ofSeconds(secondsLeft)
-            val instant = now.plusSeconds(timeLeft.seconds - secondsLeft)
+            val instant = now.plusSeconds(durationEta.seconds - secondsLeft)
             timeLeft to instant
         }.forEach { (timeLeft, instant) ->
             val delay = Duration.between(Instant.now(), instant)
