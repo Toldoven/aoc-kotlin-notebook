@@ -5,7 +5,9 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import java.io.File
-import kotlin.time.Duration.Companion.seconds
+import java.time.Duration
+import java.time.Instant
+import kotlin.time.toKotlinDuration
 
 private class AocDayCache(cacheDir: File, day: AocDay, private val tokenHash: String) {
 
@@ -137,7 +139,6 @@ class InteractiveAocDay(
                 day to day.untilStartsEstimate()
             }
 
-        // Day is already unlocked
         if (day < dayEta || (day == dayEta && durationEta.isNegative)) {
             println("Day is already unlocked!")
             return@runBlocking
@@ -145,12 +146,24 @@ class InteractiveAocDay(
 
         fun Number.pad() = toString().padStart(2, '0')
 
-        (durationEta.seconds downTo 0L).forEach {
-            val formated = it.seconds.toComponents { hours, minutes, seconds, _ ->
+        val now = Instant.now()
+
+        (durationEta.seconds downTo 0L).asSequence().map { secondsLeft ->
+            val timeLeft = Duration.ofSeconds(secondsLeft)
+            val instant = now.plusSeconds(timeLeft.seconds - secondsLeft)
+            timeLeft to instant
+        }.forEach { (timeLeft, instant) ->
+            val delay = Duration.between(Instant.now(), instant)
+                .toMillis()
+                .coerceAtLeast(0)
+
+            delay(delay)
+
+            val formated = timeLeft.toKotlinDuration().toComponents { hours, minutes, seconds, _ ->
                 "${hours.pad()}:${minutes.pad()}:${seconds.pad()}"
             }
+
             print("AoC ${day.year} Day ${day.day} starts in ${formated}\r")
-            delay(1.seconds)
         }
 
         println("Day started!")
