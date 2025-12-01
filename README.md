@@ -9,11 +9,7 @@ https://github.com/user-attachments/assets/46c85513-7156-412c-b26a-bade8593a429
 
 # Prerequisites
 
-To use [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html) you need to have [IntelliJ IDEA **Ultimate**](https://www.jetbrains.com/idea/) (paid version).
-
-You can start a trial for 30 days, or use [Early Access](https://www.jetbrains.com/idea/nextversion/) version for free (not always available).
-
-Install [Kotlin Notebook Plugin](https://www.jetbrains.com/help/idea/kotlin-notebook.html#install-plugin).
+To use [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html) you need to have [IntelliJ IDEA](https://www.jetbrains.com/idea/). Starting version 2025.1 Kotlin Notebook are free both for Ultimate and Community versions and doesn't require any extra setup.
 
 # Setup
 
@@ -135,7 +131,8 @@ A few ideas I will hopefully get to implement.
 
 # Additional Resources
 
-- [Learn more about Kotlin Notebook](https://www.jetbrains.com/help/idea/kotlin-notebook.html#best-practices)
-- [Solve Advent of Code 2024 Puzzles in Kotlin and Win Prizes](https://blog.jetbrains.com/kotlin/2024/11/advent-of-code-2024-in-kotlin/)
+- [Learn more about Kotlin Notebook](https://blog.jetbrains.com/idea/2025/04/how-to-use-kotlin-notebooks-for-productive-development)
+- [Kotlin Notebook Documentation](https://kotlinlang.org/docs/kotlin-notebook-overview.html#backend-development)
+- [Solve Advent of Code 2025 Puzzles in Kotlin and Win Prizes](https://blog.jetbrains.com/kotlin/2025/11/advent-of-code-in-kotlin-2025)
 
 
