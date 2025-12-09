@@ -1,9 +1,11 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
-    kotlin("jvm") version "1.9.24"
-    id("org.jetbrains.kotlin.jupyter.api") version "0.12.0-339"
+    kotlin("jvm") version "2.2.20"
+    id("org.jetbrains.kotlin.jupyter.api") version "0.15.1-710"
     id("com.vanniktech.maven.publish") version "0.30.0"
+    id("com.gradleup.shadow") version "9.2.2"
 }
 
 repositories {
@@ -26,6 +28,18 @@ tasks.test {
 
 kotlin {
     jvmToolchain(17)
+}
+
+val shadowJar by tasks.getting(ShadowJar::class) {
+    // publish shaded artifact without the default "-all" suffix
+    archiveClassifier.set("")
+    mergeServiceFiles()
+
+    fun relocate(pattern: String) = relocate(pattern, "com.toldoven.aoc.shaded.$pattern")
+    relocate("it.skrape")
+    relocate("io.ktor")
+    relocate("kotlinx")
+    relocate("org.apache")
 }
 
 mavenPublishing {
@@ -62,4 +76,21 @@ mavenPublishing {
     }
 
     signAllPublications()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("shadow") {
+            groupId = project.group.toString()
+            artifactId = property("artifactId") as String
+            version = project.version.toString()
+
+            artifact(tasks.shadowJar.get())
+
+            pom {
+                name.set("Advent of Code in Kotlin Notebook (shaded)")
+                description.set("Shaded distribution with relocations to avoid clashes with other dependencies")
+            }
+        }
+    }
 }

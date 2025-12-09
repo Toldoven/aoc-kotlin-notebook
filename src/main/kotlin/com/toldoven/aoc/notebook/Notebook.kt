@@ -41,7 +41,9 @@ private class AocDayCache(cacheDir: File, day: AocDay, private val tokenHash: St
 
     companion object {
         fun fromEnvOrDefault(tokenHash: String, day: AocDay): AocDayCache {
-            val path = System.getenv("AOC_CACHE_DIR") ?: ".aocCache"
+            val path = System.getProperty("aoc.cache.dir")
+                ?: System.getenv("AOC_CACHE_DIR")
+                ?: ".aocCache"
 
             val dir = File(path)
 
